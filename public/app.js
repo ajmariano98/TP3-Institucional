@@ -64,12 +64,12 @@ function updateDateTime() {
 
 // CLIMA - Simulado (OpenWeatherMap requiere API key)
 async function loadCurrentWeather() {
-    // Simulación de datos de clima para Buenos Aires
+    // Simulación de datos de clima para Garupá, Misiones
     const weatherData = {
-        city: 'Buenos Aires',
-        temp: Math.floor(Math.random() * 15) + 18, // 18-32°C
+        city: 'Garupá, Misiones',
+        temp: Math.floor(Math.random() * 15) + 20, // 20-35°C
         description: ['Despejado', 'Parcialmente nublado', 'Nublado', 'Soleado'][Math.floor(Math.random() * 4)],
-        humidity: Math.floor(Math.random() * 40) + 40, // 40-80%
+        humidity: Math.floor(Math.random() * 40) + 50, // 50-90%
         wind: (Math.random() * 20 + 5).toFixed(1) // 5-25 km/h
     };
 
@@ -135,6 +135,9 @@ function setupForms() {
         const formData = new FormData(e.target);
         const data = Object.fromEntries(formData.entries());
 
+        console.log('Enviando datos:', data);
+        console.log('API URL:', API_URL);
+
         try {
             const response = await fetch(`${API_URL}/alumnos`, {
                 method: 'POST',
@@ -142,7 +145,9 @@ function setupForms() {
                 body: JSON.stringify(data)
             });
 
+            console.log('Response status:', response.status);
             const result = await response.json();
+            console.log('Response data:', result);
 
             if (response.ok) {
                 showNotification('✅ Alumno registrado exitosamente', 'success');

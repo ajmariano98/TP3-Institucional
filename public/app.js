@@ -1,5 +1,7 @@
 // API Base URL
-const API_URL = 'http://localhost:3000/api';
+const API_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:3000/api' 
+    : '/api';
 const WEATHER_API_KEY = ''; // OpenWeatherMap API (opcional, usaremos datos simulados)
 
 let currentFilter = '';

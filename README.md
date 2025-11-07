@@ -49,6 +49,27 @@ npm start
 http://localhost:3000
 ```
 
+## 🌐 Despliegue en Vercel
+
+### Opción 1: Desde GitHub (Recomendado)
+
+1. Ve a [vercel.com](https://vercel.com)
+2. Inicia sesión con tu cuenta de GitHub
+3. Click en "Add New Project"
+4. Importa el repositorio `TP3-Institucional`
+5. Vercel detectará automáticamente la configuración
+6. Click en "Deploy"
+
+### Opción 2: CLI de Vercel
+
+```bash
+npm install -g vercel
+vercel login
+vercel --prod
+```
+
+**Nota**: SQLite funciona con limitaciones en Vercel. Para producción real, considera usar una base de datos en la nube como PostgreSQL o MongoDB.
+
 ## 📁 Estructura del Proyecto
 
 ```

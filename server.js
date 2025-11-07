@@ -179,8 +179,13 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Iniciar servidor
-app.listen(PORT, () => {
-  console.log(`✅ Servidor corriendo en http://localhost:${PORT}`);
-  console.log(`📁 Archivos estáticos servidos desde /public`);
-});
+// Iniciar servidor (solo en desarrollo local)
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`✅ Servidor corriendo en http://localhost:${PORT}`);
+    console.log(`📁 Archivos estáticos servidos desde /public`);
+  });
+}
+
+// Exportar para Vercel
+export default app;

@@ -49,26 +49,27 @@ npm start
 http://localhost:3000
 ```
 
-## 🌐 Despliegue en Vercel
+## 🌐 Despliegue en Render
 
-### Opción 1: Desde GitHub (Recomendado)
+### Despliegue desde GitHub
 
-1. Ve a [vercel.com](https://vercel.com)
-2. Inicia sesión con tu cuenta de GitHub
-3. Click en "Add New Project"
-4. Importa el repositorio `TP3-Institucional`
-5. Vercel detectará automáticamente la configuración
-6. Click en "Deploy"
+1. Ve a [render.com](https://render.com) y crea una cuenta
+2. Click en "New +" → "Web Service"
+3. Conecta tu repositorio de GitHub: `TP3-Institucional`
+4. Configuración:
+   - **Name**: tp3-institucional (o el que prefieras)
+   - **Environment**: Node
+   - **Build Command**: `npm install`
+   - **Start Command**: `npm start`
+   - **Instance Type**: Free
+5. Click en "Create Web Service"
+6. Espera 2-3 minutos mientras se despliega
 
-### Opción 2: CLI de Vercel
+**Nota sobre SQLite**: Los datos en SQLite se mantienen mientras el servicio esté activo, pero se perderán al hacer redeploy. Para persistencia permanente, considera migrar a PostgreSQL (Render ofrece PostgreSQL gratis).
 
-```bash
-npm install -g vercel
-vercel login
-vercel --prod
-```
+### Acceder a tu aplicación
 
-**Nota**: SQLite funciona con limitaciones en Vercel. Para producción real, considera usar una base de datos en la nube como PostgreSQL o MongoDB.
+Tu aplicación estará disponible en: `https://tp3-institucional.onrender.com`
 
 ## 📁 Estructura del Proyecto
 
@@ -78,6 +79,7 @@ portal-institucional/
 │   ├── index.html      # Página principal
 │   └── app.js          # Lógica del frontend
 ├── server.js           # Servidor Express + API REST
+├── render.yaml         # Configuración de Render
 ├── database.db         # Base de datos SQLite (se crea automáticamente)
 ├── package.json        # Dependencias
 └── README.md          # Esta documentación

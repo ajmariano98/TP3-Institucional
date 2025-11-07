@@ -9,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
@@ -179,13 +179,12 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Iniciar servidor (solo en desarrollo local)
-if (process.env.NODE_ENV !== 'production') {
-  app.listen(PORT, () => {
-    console.log(`✅ Servidor corriendo en http://localhost:${PORT}`);
-    console.log(`📁 Archivos estáticos servidos desde /public`);
-  });
-}
+// Iniciar servidor
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`✅ Servidor corriendo en puerto ${PORT}`);
+  console.log(`📁 Archivos estáticos servidos desde /public`);
+  console.log(`🗄️  Base de datos SQLite inicializada`);
+});
 
-// Exportar para Vercel
+// Exportar para compatibilidad
 export default app;

@@ -239,7 +239,7 @@ async function loadAlumnos(curso = '', carrera = '') {
         console.error('Error:', error);
         document.getElementById('tablaAlumnos').innerHTML = `
             <tr>
-                <td colspan="7" class="px-6 py-4 text-center text-gray-500">
+                <td colspan="9" class="px-6 py-4 text-center text-gray-500">
                     <i class="fas fa-exclamation-triangle text-yellow-500 text-2xl mb-2"></i>
                     <p>Error al conectar con el servidor</p>
                 </td>
@@ -254,7 +254,7 @@ function displayAlumnos(alumnos) {
     if (alumnos.length === 0) {
         tbody.innerHTML = `
             <tr>
-                <td colspan="7" class="px-6 py-8 text-center text-gray-500">
+                <td colspan="9" class="px-6 py-8 text-center text-gray-500">
                     <i class="fas fa-inbox text-4xl text-gray-300 mb-3"></i>
                     <p>No hay alumnos registrados</p>
                 </td>
@@ -269,6 +269,8 @@ function displayAlumnos(alumnos) {
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${alumno.apellido}, ${alumno.nombre}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${alumno.dni}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${alumno.email}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${alumno.telefono || '-'}</td>
+            <td class="px-6 py-4 text-sm text-gray-600">${alumno.direccion || '-'}</td>
             <td class="px-6 py-4 text-sm text-gray-600">
                 <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
                     ${alumno.carrera ? alumno.carrera.replace('Tecnicatura Superior en ', '') : 'N/A'}

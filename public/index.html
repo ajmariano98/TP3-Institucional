@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Institucional - IESA Posadas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .nav-link.active {
+            background-color: rgba(115, 46, 54, 0.1);
+            color: #732e36;
+            border-left: 4px solid #732e36;
+        }
+        .nav-link:hover {
+            background-color: rgba(115, 46, 54, 0.05);
+        }
+        .section-content {
+            display: none;
+        }
+        .section-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .btn-primary {
+            background-color: #732e36 !important;
+        }
+        .btn-primary:hover {
+            background-color: #5a2329 !important;
+        }
+        .text-primary {
+            color: #732e36 !important;
+        }
+        .bg-primary {
+            background-color: #732e36 !important;
+        }
+        .border-primary {
+            border-color: #732e36 !important;
+        }
+        .course-filter.active-filter {
+            background-color: #732e36 !important;
+            color: white !important;
+        }
+        .carrera-filter.active-filter {
+            background-color: #732e36 !important;
+            color: white !important;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none !important;
+            border-color: #732e36 !important;
+            box-shadow: 0 0 0 3px rgba(115, 46, 54, 0.1) !important;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header style="background-color: #732e36;" class="text-white shadow-lg">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <i class="fas fa-graduation-cap text-4xl"></i>
+                    <div>
+                        <h1 class="text-3xl font-bold">IESA - Instituto de Estudios Superiores Argentino</h1>
+                        <p class="text-gray-100">Portal de Gestión Académica - Posadas, Misiones</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <p class="text-sm text-gray-100" id="currentDateTime"></p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white shadow-lg">
+            <nav class="mt-8">
+                <a href="#home" class="nav-link active flex items-center px-6 py-4 text-gray-700 transition duration-200">
+                    <i class="fas fa-home w-6"></i>
+                    <span class="ml-3">Inicio</span>
+                </a>
+                <a href="#cargar-alumno" class="nav-link flex items-center px-6 py-4 text-gray-700 transition duration-200">
+                    <i class="fas fa-user-plus w-6"></i>
+                    <span class="ml-3">Cargar Alumno</span>
+                </a>
+                <a href="#listado-alumnos" class="nav-link flex items-center px-6 py-4 text-gray-700 transition duration-200">
+                    <i class="fas fa-users w-6"></i>
+                    <span class="ml-3">Listado de Alumnos</span>
+                </a>
+                <a href="#historia" class="nav-link flex items-center px-6 py-4 text-gray-700 transition duration-200">
+                    <i class="fas fa-book w-6"></i>
+                    <span class="ml-3">Nuestra Historia</span>
+                </a>
+                <a href="#ia-generativa" class="nav-link flex items-center px-6 py-4 text-gray-700 transition duration-200">
+                    <i class="fas fa-robot w-6"></i>
+                    <span class="ml-3">IA Generativa</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-8">
+            <!-- HOME Section -->
+            <section id="home-section" class="section-content active">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-2">Bienvenido al Portal Institucional</h2>
+                    <p class="text-gray-600">Sistema de gestión académica y administrativa</p>
+                </div>
+
+                <!-- Weather Widget -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-xl font-semibold mb-4 flex items-center" style="color: #732e36;">
+                            <i class="fas fa-cloud-sun mr-2" style="color: #732e36;"></i>
+                            Clima Actual
+                        </h3>
+                        <div id="weatherCurrent" class="text-center py-8">
+                            <div class="animate-pulse">
+                                <div class="h-20 w-20 bg-gray-200 rounded-full mx-auto mb-4"></div>
+                                <div class="h-4 bg-gray-200 rounded w-3/4 mx-auto mb-2"></div>
+                                <div class="h-4 bg-gray-200 rounded w-1/2 mx-auto"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-xl font-semibold mb-4 flex items-center" style="color: #732e36;">
+                            <i class="fas fa-search-location mr-2" style="color: #732e36;"></i>
+                            Buscar Clima por Ciudad
+                        </h3>
+                        <div class="mb-4">
+                            <input type="text" id="citySearch" placeholder="Ingrese nombre de ciudad..." 
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent" style="--tw-ring-color: #732e36;">
+                            <button onclick="searchCityWeather()" 
+                                    class="mt-3 w-full text-white px-6 py-3 rounded-lg transition duration-200" style="background-color: #732e36;" onmouseover="this.style.backgroundColor='#5a2329'" onmouseout="this.style.backgroundColor='#732e36'">
+                                <i class="fas fa-search mr-2"></i>Buscar
+                            </button>
+                        </div>
+                        <div id="weatherSearch"></div>
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="rounded-lg shadow-lg p-6 text-white" style="background-color: #732e36;">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-100 text-sm mb-1">Total Alumnos</p>
+                                <p class="text-3xl font-bold" id="totalAlumnos">0</p>
+                            </div>
+                            <i class="fas fa-users text-4xl opacity-80"></i>
+                        </div>
+                    </div>
+                    <div class="rounded-lg shadow-lg p-6 text-white" style="background-color: #8a3a43;">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-100 text-sm mb-1">Cursos Activos</p>
+                                <p class="text-3xl font-bold">3</p>
+                            </div>
+                            <i class="fas fa-book-open text-4xl opacity-80"></i>
+                        </div>
+                    </div>
+                    <div class="rounded-lg shadow-lg p-6 text-white" style="background-color: #5a2329;">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-100 text-sm mb-1">Año Lectivo</p>
+                                <p class="text-3xl font-bold">2025</p>
+                            </div>
+                            <i class="fas fa-calendar text-4xl opacity-80"></i>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CARGAR ALUMNO Section -->
+            <section id="cargar-alumno-section" class="section-content">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-2">Cargar Nuevo Alumno</h2>
+                    <p class="text-gray-600">Complete el formulario con los datos del estudiante</p>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-lg p-8 max-w-4xl">
+                    <form id="formAlumno" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Nombre <span class="text-red-500">*</span>
+                                </label>
+                                <input type="text" name="nombre" required 
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-2 focus:border-transparent">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Apellido <span class="text-red-500">*</span>
+                                </label>
+                                <input type="text" name="apellido" required 
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-2 focus:border-transparent">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    DNI <span class="text-red-500">*</span>
+                                </label>
+                                <input type="text" name="dni" required pattern="[0-9]{7,8}"
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-2 focus:border-transparent">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Email <span class="text-red-500">*</span>
+                                </label>
+                                <input type="email" name="email" required 
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-2 focus:border-transparent">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Teléfono
+                                </label>
+                                <input type="tel" name="telefono" 
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-2 focus:border-transparent">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Carrera <span class="text-red-500">*</span>
+                                </label>
+                                <select name="carrera" required 
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-2 focus:border-transparent">
+                                    <option value="">Seleccione una carrera</option>
+                                    <option value="Tecnicatura Superior en Análisis de Sistemas">Tecnicatura Superior en Análisis de Sistemas</option>
+                                    <option value="Tecnicatura Superior en Diseño Gráfico">Tecnicatura Superior en Diseño Gráfico</option>
+                                    <option value="Tecnicatura Superior en Gestión Jurídica Generalista">Tecnicatura Superior en Gestión Jurídica Generalista</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Curso <span class="text-red-500">*</span>
+                                </label>
+                                <select name="curso" required 
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-2 focus:border-transparent">
+                                    <option value="">Seleccione un curso</option>
+                                    <option value="1er Año">1er Año</option>
+                                    <option value="2do Año">2do Año</option>
+                                    <option value="3er Año">3er Año</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Fecha de Inscripción <span class="text-red-500">*</span>
+                                </label>
+                                <input type="date" name="fecha_ingreso" required id="fecha_ingreso"
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-2 focus:border-transparent">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Dirección
+                                </label>
+                                <input type="text" name="direccion" 
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-2 focus:border-transparent">
+                            </div>
+                        </div>
+
+                        <div class="flex gap-4">
+                            <button type="submit" 
+                                    class="flex-1 btn-primary text-white px-6 py-3 rounded-lg hover:opacity-90 transition duration-200 font-medium">
+                                <i class="fas fa-save mr-2"></i>Guardar Alumno
+                            </button>
+                            <button type="reset" 
+                                    class="bg-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-400 transition duration-200 font-medium">
+                                <i class="fas fa-times mr-2"></i>Limpiar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- LISTADO ALUMNOS Section -->
+            <section id="listado-alumnos-section" class="section-content">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-2">Listado de Alumnos</h2>
+                    <p class="text-gray-600">Gestión completa de estudiantes por curso</p>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                    <div class="mb-4">
+                        <h3 class="text-lg font-semibold mb-3 text-gray-700">Filtrar por Carrera:</h3>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <button onclick="filterByCarrera('')" class="carrera-filter active-filter px-4 py-2 rounded-lg transition duration-200 text-sm">
+                                Todas las Carreras
+                            </button>
+                            <button onclick="filterByCarrera('Tecnicatura Superior en Análisis de Sistemas')" class="carrera-filter px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition duration-200 text-sm">
+                                Análisis de Sistemas
+                            </button>
+                            <button onclick="filterByCarrera('Tecnicatura Superior en Diseño Gráfico')" class="carrera-filter px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition duration-200 text-sm">
+                                Diseño Gráfico
+                            </button>
+                            <button onclick="filterByCarrera('Tecnicatura Superior en Gestión Jurídica Generalista')" class="carrera-filter px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition duration-200 text-sm">
+                                Gestión Jurídica
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold mb-3 text-gray-700">Filtrar por Curso:</h3>
+                        <div class="flex flex-wrap gap-4 items-center justify-between">
+                            <div class="flex gap-2">
+                                <button onclick="filterByCourse('')" class="course-filter active-filter px-4 py-2 rounded-lg transition duration-200">
+                                    Todos
+                                </button>
+                                <button onclick="filterByCourse('1er Año')" class="course-filter px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition duration-200">
+                                    1er Año
+                                </button>
+                                <button onclick="filterByCourse('2do Año')" class="course-filter px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition duration-200">
+                                    2do Año
+                                </button>
+                                <button onclick="filterByCourse('3er Año')" class="course-filter px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition duration-200">
+                                    3er Año
+                                </button>
+                            </div>
+                            <button onclick="loadAlumnos()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-200">
+                                <i class="fas fa-sync-alt mr-2"></i>Actualizar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Apellido y Nombre</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">DNI</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Carrera</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Curso</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaAlumnos" class="bg-white divide-y divide-gray-200">
+                                <!-- Se llena dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- HISTORIA Section -->
+            <section id="historia-section" class="section-content">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-2">Historia de Nuestra Institución</h2>
+                    <p class="text-gray-600">Instituto de Estudios Superiores Argentino - IESA</p>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-lg p-8">
+                    <div class="prose max-w-none">
+                        <div class="mb-8">
+                            <img src="https://images.unsplash.com/photo-1562774053-701939374585?w=1200&h=400&fit=crop" 
+                                 alt="Instituto IESA" class="w-full h-64 object-cover rounded-lg shadow-md mb-6">
+                        </div>
+
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">Quiénes Somos</h3>
+                        <p class="text-gray-600 mb-6 leading-relaxed">
+                            El <strong>IESA (Instituto de Estudios Superiores Argentino)</strong> es un establecimiento terciario 
+                            de enseñanza pública de gestión privada, fundado en <strong>2003 en Posadas, Misiones</strong>. 
+                            Desde entonces, hemos dedicado más de dos décadas a brindar formación profesional exitosa, 
+                            consolidándonos como una institución de referencia en la región.
+                        </p>
+
+                        <p class="text-gray-600 mb-6 leading-relaxed">
+                            Nuestro compromiso es con la <strong>excelencia educativa</strong> y la <strong>formación integral</strong> 
+                            de nuestros estudiantes, preparándolos para enfrentar los desafíos del mundo laboral actual con 
+                            las competencias y habilidades necesarias para destacarse profesionalmente.
+                        </p>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                            <img src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=600&h=400&fit=crop" 
+                                 alt="Estudiantes IESA" class="w-full h-48 object-cover rounded-lg shadow-md">
+                            <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&h=400&fit=crop" 
+                                 alt="Aulas IESA" class="w-full h-48 object-cover rounded-lg shadow-md">
+                        </div>
+
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">Nuestra Misión</h3>
+                        <div class="bg-blue-50 border-l-4 border-blue-600 p-6 mb-6 rounded-r-lg">
+                            <p class="text-gray-700 leading-relaxed">
+                                Hacer que el trabajo sea <strong>inspirador y gratificante</strong>, formando profesionales 
+                                que no solo dominen su campo de estudio, sino que también encuentren propósito y satisfacción 
+                                en su desarrollo profesional.
+                            </p>
+                        </div>
+
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">Nuestros Pilares Institucionales</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                            <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-lg shadow-md">
+                                <div class="flex items-center mb-3">
+                                    <i class="fas fa-user-tie text-3xl text-blue-600 mr-3"></i>
+                                    <h4 class="text-xl font-bold text-gray-800">Formar Líderes</h4>
+                                </div>
+                                <p class="text-gray-700">
+                                    Desarrollamos las capacidades de liderazgo en nuestros estudiantes, preparándolos 
+                                    para asumir roles de conducción y toma de decisiones en sus áreas profesionales.
+                                </p>
+                            </div>
+
+                            <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-lg shadow-md">
+                                <div class="flex items-center mb-3">
+                                    <i class="fas fa-award text-3xl text-green-600 mr-3"></i>
+                                    <h4 class="text-xl font-bold text-gray-800">Excelencia y Ética</h4>
+                                </div>
+                                <p class="text-gray-700">
+                                    Promovemos los más altos estándares de calidad educativa, combinados con valores 
+                                    éticos sólidos que guían el desempeño profesional de nuestros egresados.
+                                </p>
+                            </div>
+
+                            <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-lg shadow-md">
+                                <div class="flex items-center mb-3">
+                                    <i class="fas fa-users text-3xl text-purple-600 mr-3"></i>
+                                    <h4 class="text-xl font-bold text-gray-800">Comunidad Inclusiva</h4>
+                                </div>
+                                <p class="text-gray-700">
+                                    Fomentamos un ambiente educativo diverso e inclusivo, donde cada estudiante 
+                                    encuentra su espacio para crecer y desarrollarse plenamente.
+                                </p>
+                            </div>
+
+                            <div class="bg-gradient-to-br from-red-50 to-red-100 p-6 rounded-lg shadow-md">
+                                <div class="flex items-center mb-3">
+                                    <i class="fas fa-lightbulb text-3xl text-primary mr-3"></i>
+                                    <h4 class="text-xl font-bold text-gray-800">Vanguardia Educativa</h4>
+                                </div>
+                                <p class="text-gray-700">
+                                    Nos mantenemos a la vanguardia de las tendencias educativas y tecnológicas, 
+                                    actualizando constantemente nuestros programas y metodologías de enseñanza.
+                                </p>
+                            </div>
+                        </div>
+
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">Nuestra Trayectoria</h3>
+                        <div class="bg-gray-50 p-6 rounded-lg mb-6">
+                            <div class="space-y-4">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 w-24 font-bold text-blue-600 text-lg whitespace-nowrap mr-4">2003</div>
+                                    <p class="text-gray-700">Fundación del IESA en Posadas, Misiones, con el objetivo de brindar educación superior de calidad.</p>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 w-24 font-bold text-blue-600 text-lg whitespace-nowrap mr-4">2005-2010</div>
+                                    <p class="text-gray-700">Expansión de la oferta académica con nuevas tecnicaturas y formaciones profesionales.</p>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 w-24 font-bold text-blue-600 text-lg whitespace-nowrap mr-4">2015</div>
+                                    <p class="text-gray-700">Incorporación de tecnologías educativas modernas y plataformas de aprendizaje virtual.</p>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 w-24 font-bold text-blue-600 text-lg whitespace-nowrap mr-4">2020-2025</div>
+                                    <p class="text-gray-700">Adaptación a la educación híbrida y consolidación como institución de referencia en la provincia.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">Oferta Académica</h3>
+                        <p class="text-gray-600 mb-4 leading-relaxed">
+                            En el IESA ofrecemos una amplia variedad de programas educativos:
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                            <div class="bg-blue-100 p-4 rounded-lg text-center">
+                                <i class="fas fa-graduation-cap text-3xl text-blue-600 mb-2"></i>
+                                <h4 class="font-semibold text-gray-800">Tecnicaturas Superiores</h4>
+                                <p class="text-sm text-gray-600 mt-2">Formación técnica profesional de 3 años</p>
+                            </div>
+                            <div class="bg-green-100 p-4 rounded-lg text-center">
+                                <i class="fas fa-certificate text-3xl text-green-600 mb-2"></i>
+                                <h4 class="font-semibold text-gray-800">Formaciones Profesionales</h4>
+                                <p class="text-sm text-gray-600 mt-2">Capacitación específica para el mercado laboral</p>
+                            </div>
+                            <div class="bg-purple-100 p-4 rounded-lg text-center">
+                                <i class="fas fa-book text-3xl text-purple-600 mb-2"></i>
+                                <h4 class="font-semibold text-gray-800">Cursos</h4>
+                                <p class="text-sm text-gray-600 mt-2">Actualización y especialización continua</p>
+                            </div>
+                        </div>
+
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">Nuestro Compromiso</h3>
+                        <p class="text-gray-600 leading-relaxed mb-4">
+                            En el IESA continuamos trabajando día a día para ofrecer una educación de calidad que transforme 
+                            vidas y contribuya al desarrollo de nuestra comunidad. Nos enorgullece ser parte del crecimiento 
+                            profesional de cientos de estudiantes que, año tras año, confían en nuestra institución para 
+                            alcanzar sus metas.
+                        </p>
+                        <p class="text-gray-600 leading-relaxed">
+                            <strong>Ubicados en Posadas, Misiones</strong>, seguimos siendo un referente en educación superior, 
+                            manteniendo nuestro compromiso con la excelencia, la innovación y la formación integral de 
+                            profesionales preparados para los desafíos del siglo XXI.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- IA GENERATIVA Section -->
+            <section id="ia-generativa-section" class="section-content">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-2">Unidad 6: IA Generativa en la Web</h2>
+                    <p class="text-gray-600">Explorando el futuro de la tecnología</p>
+                </div>
+
+                <div class="space-y-6">
+                    <!-- ¿Qué es la IA Generativa? -->
+                    <div class="bg-white rounded-lg shadow-lg p-8">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                            <i class="fas fa-brain text-purple-600 mr-3"></i>
+                            ¿Qué es la IA Generativa?
+                        </h3>
+                        <p class="text-gray-600 leading-relaxed mb-4">
+                            La <strong>Inteligencia Artificial Generativa</strong> es una rama de la IA que se enfoca en crear contenido 
+                            nuevo y original a partir de patrones aprendidos de grandes conjuntos de datos. A diferencia de los sistemas 
+                            tradicionales que solo clasifican o analizan información existente, la IA generativa puede producir texto, 
+                            imágenes, código, música y otros tipos de contenido.
+                        </p>
+                        <p class="text-gray-600 leading-relaxed">
+                            Utiliza modelos de aprendizaje profundo como GPT (Generative Pre-trained Transformer), DALL-E, y otros 
+                            para entender contexto, generar respuestas coherentes y crear contenido que antes requería creatividad humana.
+                        </p>
+                    </div>
+
+                    <!-- Herramientas -->
+                    <div class="bg-white rounded-lg shadow-lg p-8">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                            <i class="fas fa-tools text-blue-600 mr-3"></i>
+                            Herramientas de IA Generativa
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition duration-200">
+                                <div class="flex items-center mb-3">
+                                    <i class="fas fa-comment-dots text-green-500 text-2xl mr-3"></i>
+                                    <h4 class="text-xl font-semibold">ChatGPT</h4>
+                                </div>
+                                <p class="text-gray-600">
+                                    Modelo de lenguaje de OpenAI capaz de mantener conversaciones naturales, generar texto, 
+                                    código, responder preguntas y asistir en tareas complejas.
+                                </p>
+                            </div>
+                            <div class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition duration-200">
+                                <div class="flex items-center mb-3">
+                                    <i class="fas fa-robot text-blue-500 text-2xl mr-3"></i>
+                                    <h4 class="text-xl font-semibold">GitHub Copilot</h4>
+                                </div>
+                                <p class="text-gray-600">
+                                    Asistente de programación basado en IA que sugiere código en tiempo real, completa funciones 
+                                    y ayuda a escribir código más rápido y eficiente.
+                                </p>
+                            </div>
+                            <div class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition duration-200">
+                                <div class="flex items-center mb-3">
+                                    <i class="fas fa-image text-purple-500 text-2xl mr-3"></i>
+                                    <h4 class="text-xl font-semibold">DALL-E</h4>
+                                </div>
+                                <p class="text-gray-600">
+                                    Generador de imágenes de OpenAI que crea visualizaciones únicas y artísticas a partir 
+                                    de descripciones textuales.
+                                </p>
+                            </div>
+                            <div class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition duration-200">
+                                <div class="flex items-center mb-3">
+                                    <i class="fas fa-palette text-primary text-2xl mr-3"></i>
+                                    <h4 class="text-xl font-semibold">Midjourney</h4>
+                                </div>
+                                <p class="text-gray-600">
+                                    Plataforma de generación de imágenes artísticas de alta calidad mediante prompts textuales, 
+                                    popular en diseño y arte digital.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ejemplos de Prompts -->
+                    <div class="bg-white rounded-lg shadow-lg p-8">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                            <i class="fas fa-code text-indigo-600 mr-3"></i>
+                            Ejemplos de Prompts Útiles
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="bg-gray-50 border-l-4 border-blue-500 p-4 rounded">
+                                <h4 class="font-semibold text-gray-800 mb-2">🔹 Generación de Código JavaScript</h4>
+                                <code class="text-sm text-gray-700">
+                                    "Crea una función en JavaScript que valide un email y retorne true o false. 
+                                    Incluye comentarios explicativos."
+                                </code>
+                            </div>
+                            <div class="bg-gray-50 border-l-4 border-green-500 p-4 rounded">
+                                <h4 class="font-semibold text-gray-800 mb-2">🔹 Diseño Web con Tailwind</h4>
+                                <code class="text-sm text-gray-700">
+                                    "Genera el código HTML con Tailwind CSS para una tarjeta de producto con imagen, 
+                                    título, descripción, precio y botón de compra."
+                                </code>
+                            </div>
+                            <div class="bg-gray-50 border-l-4 border-purple-500 p-4 rounded">
+                                <h4 class="font-semibold text-gray-800 mb-2">🔹 Debugging de Código</h4>
+                                <code class="text-sm text-gray-700">
+                                    "Analiza este código y explica por qué no funciona correctamente. 
+                                    Sugiere una solución optimizada."
+                                </code>
+                            </div>
+                            <div class="bg-gray-50 border-l-4 border-primary p-4 rounded">
+                                <h4 class="font-semibold text-gray-800 mb-2">🔹 API REST con Node.js</h4>
+                                <code class="text-sm text-gray-700">
+                                    "Crea una API REST en Node.js con Express para gestionar usuarios. 
+                                    Incluye rutas GET, POST, PUT y DELETE."
+                                </code>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Análisis de Aplicación Real -->
+                    <div class="bg-white rounded-lg shadow-lg p-8">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                            <i class="fas fa-chart-line text-cyan-600 mr-3"></i>
+                            Análisis: Aplicación Web con IA
+                        </h3>
+                        <h4 class="text-xl font-semibold text-gray-800 mb-3">Caso de Estudio: Grammarly</h4>
+                        <p class="text-gray-600 leading-relaxed mb-4">
+                            <strong>Grammarly</strong> es una aplicación web que utiliza IA generativa y procesamiento de lenguaje 
+                            natural para mejorar la escritura en tiempo real. 
+                        </p>
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-4">
+                            <h5 class="font-semibold text-gray-800 mb-3">Características principales:</h5>
+                            <ul class="list-disc list-inside text-gray-600 space-y-2">
+                                <li><strong>Corrección gramatical automática:</strong> Detecta errores y sugiere correcciones</li>
+                                <li><strong>Mejora de estilo:</strong> Propone alternativas para hacer el texto más claro y profesional</li>
+                                <li><strong>Detección de tono:</strong> Analiza el contexto emocional del mensaje</li>
+                                <li><strong>Generación de sugerencias:</strong> Crea frases alternativas más efectivas</li>
+                            </ul>
+                        </div>
+                        <p class="text-gray-600 leading-relaxed">
+                            Esta aplicación demuestra cómo la IA puede asistir en tareas creativas sin reemplazar al usuario, 
+                            actuando como un co-piloto inteligente que potencia la productividad.
+                        </p>
+                    </div>
+
+                    <!-- Uso Ético -->
+                    <div class="bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-primary rounded-lg shadow-lg p-8">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                            <i class="fas fa-balance-scale text-primary mr-3"></i>
+                            Uso Ético y Responsable de la IA
+                        </h3>
+                        <div class="space-y-4 text-gray-700">
+                            <div class="flex items-start">
+                                <i class="fas fa-check-circle text-green-600 mt-1 mr-3"></i>
+                                <div>
+                                    <strong>Transparencia:</strong> Siempre indicar cuando un contenido fue generado por IA
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-check-circle text-green-600 mt-1 mr-3"></i>
+                                <div>
+                                    <strong>Verificación:</strong> No confiar ciegamente; revisar y validar la información
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-check-circle text-green-600 mt-1 mr-3"></i>
+                                <div>
+                                    <strong>Privacidad:</strong> No compartir datos sensibles o confidenciales con sistemas de IA
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-check-circle text-green-600 mt-1 mr-3"></i>
+                                <div>
+                                    <strong>Atribución:</strong> Respetar derechos de autor y no usar IA para plagiar
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-check-circle text-green-600 mt-1 mr-3"></i>
+                                <div>
+                                    <strong>Complemento, no reemplazo:</strong> Usar IA como herramienta de apoyo, no como sustituto del pensamiento crítico
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Debate -->
+                    <div class="bg-white rounded-lg shadow-lg p-8">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                            <i class="fas fa-comments text-red-600 mr-3"></i>
+                            Debate: ¿La IA Reemplaza o Potencia al Desarrollador?
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div class="border-2 border-blue-300 rounded-lg p-6 bg-blue-50">
+                                <h4 class="text-xl font-semibold text-blue-800 mb-3 flex items-center">
+                                    <i class="fas fa-rocket mr-2"></i>
+                                    La IA como Potenciador
+                                </h4>
+                                <ul class="space-y-2 text-gray-700">
+                                    <li>✅ Acelera tareas repetitivas y rutinarias</li>
+                                    <li>✅ Libera tiempo para pensamiento creativo</li>
+                                    <li>✅ Facilita el aprendizaje de nuevas tecnologías</li>
+                                    <li>✅ Mejora la productividad y eficiencia</li>
+                                    <li>✅ Democratiza el acceso a la programación</li>
+                                    <li>✅ Ayuda a detectar errores rápidamente</li>
+                                </ul>
+                            </div>
+                            <div class="border-2 border-red-300 rounded-lg p-6 bg-red-50">
+                                <h4 class="text-xl font-semibold text-red-800 mb-3 flex items-center">
+                                    <i class="fas fa-exclamation-triangle mr-2"></i>
+                                    Riesgos y Preocupaciones
+                                </h4>
+                                <ul class="space-y-2 text-gray-700">
+                                    <li>⚠️ Dependencia excesiva de la herramienta</li>
+                                    <li>⚠️ Pérdida de habilidades fundamentales</li>
+                                    <li>⚠️ Código generado sin entendimiento profundo</li>
+                                    <li>⚠️ Posibles errores o código subóptimo</li>
+                                    <li>⚠️ Preocupaciones sobre empleabilidad</li>
+                                    <li>⚠️ Necesidad de adaptación constante</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="bg-gradient-to-r from-purple-100 to-blue-100 border border-purple-300 rounded-lg p-6">
+                            <h4 class="text-lg font-semibold text-gray-800 mb-3">💡 Nuestra Conclusión</h4>
+                            <p class="text-gray-700 leading-relaxed">
+                                La IA es una <strong>herramienta transformadora que potencia al desarrollador</strong>, no lo reemplaza. 
+                                Los profesionales que aprenden a trabajar en colaboración con la IA, mantienen su pensamiento crítico 
+                                y continúan desarrollando sus habilidades fundamentales, estarán mejor preparados para el futuro. 
+                                La clave está en el <strong>equilibrio</strong>: usar la IA como asistente para tareas repetitivas 
+                                mientras nos enfocamos en la arquitectura, diseño y resolución creativa de problemas que requieren 
+                                intuición y experiencia humana.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal para Editar Alumno -->
+    <div id="modalEditarAlumno" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-8 border w-11/12 max-w-2xl shadow-lg rounded-lg bg-white">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-gray-800">Editar Alumno</h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            <form id="formEditarAlumno" class="space-y-4">
+                <input type="hidden" id="editId">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Nombre *</label>
+                        <input type="text" id="editNombre" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-2">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Apellido *</label>
+                        <input type="text" id="editApellido" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-2">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">DNI *</label>
+                        <input type="text" id="editDni" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-2">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
+                        <input type="email" id="editEmail" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-2">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Teléfono</label>
+                        <input type="tel" id="editTelefono" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-2">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Carrera *</label>
+                        <select id="editCarrera" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-2">
+                            <option value="Tecnicatura Superior en Análisis de Sistemas">Tecnicatura Superior en Análisis de Sistemas</option>
+                            <option value="Tecnicatura Superior en Diseño Gráfico">Tecnicatura Superior en Diseño Gráfico</option>
+                            <option value="Tecnicatura Superior en Gestión Jurídica Generalista">Tecnicatura Superior en Gestión Jurídica Generalista</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Curso *</label>
+                        <select id="editCurso" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-2">
+                            <option value="1er Año">1er Año</option>
+                            <option value="2do Año">2do Año</option>
+                            <option value="3er Año">3er Año</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Fecha de Inscripción *</label>
+                        <input type="date" id="editFechaIngreso" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-2">
+                    </div>
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Dirección</label>
+                        <input type="text" id="editDireccion" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-2">
+                    </div>
+                </div>
+                <div class="flex gap-4 mt-6">
+                    <button type="submit" class="flex-1 btn-primary text-white px-6 py-3 rounded-lg hover:opacity-90 transition duration-200">
+                        <i class="fas fa-save mr-2"></i>Guardar Cambios
+                    </button>
+                    <button type="button" onclick="closeModal()" class="bg-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-400 transition duration-200">
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

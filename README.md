@@ -175,18 +175,3 @@ CREATE TABLE alumnos (
 );
 ```
 
-## 🤝 Contribuciones
-
-Proyecto educativo desarrollado como Proyecto Final Integrador.
-
-## 📄 Licencia
-
-MIT License
-
-## ✨ Créditos
-
-- Imágenes: Unsplash (uso libre)
-- Iconos: Font Awesome
-- CSS Framework: Tailwind CSS
-- Backend: Express.js + SQLite
-

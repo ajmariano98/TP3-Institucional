@@ -1,6 +1,6 @@
 # Portal Institucional - Proyecto Final Integrador
 
-Sistema completo de gestión académica con integración de IA Generativa.
+TP3 Integrador Unidad 6
 
 ## 🚀 Características
 

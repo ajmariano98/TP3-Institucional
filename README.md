@@ -190,6 +190,3 @@ MIT License
 - CSS Framework: Tailwind CSS
 - Backend: Express.js + SQLite
 
----
-
-**Desarrollado con ❤️ para el curso de Desarrollo Web**

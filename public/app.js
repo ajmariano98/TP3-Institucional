@@ -2,7 +2,7 @@
 const API_URL = window.location.hostname === 'localhost' 
     ? 'http://localhost:3000/api' 
     : '/api';
-const WEATHER_API_KEY = 'TU_API_KEY_AQUI'; // Reemplaza con tu API key de OpenWeatherMap
+const WEATHER_API_KEY = '543c1df2125f133e66e873b9dae9e6a2'; // OpenWeatherMap API Key
 
 let currentFilter = '';
 let currentCarreraFilter = '';

@@ -2,7 +2,7 @@
 const API_URL = window.location.hostname === 'localhost' 
     ? 'http://localhost:3000/api' 
     : '/api';
-const WEATHER_API_KEY = '543c1df2125f133e66e873b9dae9e6a2'; // OpenWeatherMap API Key
+const WEATHER_API_KEY = 'a5fb7749e79744d299b203608251011'; // WeatherAPI.com API Key
 
 let currentFilter = '';
 let currentCarreraFilter = '';
@@ -62,39 +62,26 @@ function updateDateTime() {
         now.toLocaleDateString('es-ES', options);
 }
 
-// CLIMA - OpenWeatherMap API
+// CLIMA - WeatherAPI.com
 async function loadCurrentWeather() {
-    const city = 'Garupá,AR'; // Garupá, Argentina
-    
-    if (!WEATHER_API_KEY || WEATHER_API_KEY === 'TU_API_KEY_AQUI') {
-        // Si no hay API key, usar datos simulados
-        const weatherData = {
-            city: 'Garupá, Misiones',
-            temp: Math.floor(Math.random() * 15) + 20,
-            description: ['Despejado', 'Parcialmente nublado', 'Nublado', 'Soleado'][Math.floor(Math.random() * 4)],
-            humidity: Math.floor(Math.random() * 40) + 50,
-            wind: (Math.random() * 20 + 5).toFixed(1)
-        };
-        displayWeather(weatherData, 'weatherCurrent');
-        return;
-    }
+    const city = 'Garupá, Misiones, Argentina';
 
     try {
-        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${WEATHER_API_KEY}&units=metric&lang=es`;
+        const url = `https://api.weatherapi.com/v1/current.json?key=${WEATHER_API_KEY}&q=${city}&lang=es`;
         const response = await fetch(url);
         const data = await response.json();
 
-        if (response.ok) {
+        if (response.ok && data.current) {
             const weatherData = {
-                city: `${data.name}, ${data.sys.country}`,
-                temp: Math.round(data.main.temp),
-                description: data.weather[0].description,
-                humidity: data.main.humidity,
-                wind: data.wind.speed.toFixed(1)
+                city: `${data.location.name}, ${data.location.region}`,
+                temp: Math.round(data.current.temp_c),
+                description: data.current.condition.text,
+                humidity: data.current.humidity,
+                wind: data.current.wind_kph.toFixed(1)
             };
             displayWeather(weatherData, 'weatherCurrent');
         } else {
-            throw new Error('Error al obtener clima');
+            throw new Error(data.error?.message || 'Error al obtener clima');
         }
     } catch (error) {
         console.error('Error al cargar clima:', error);
@@ -131,26 +118,26 @@ async function searchCityWeather() {
     }
 
     try {
-        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${WEATHER_API_KEY}&units=metric&lang=es`;
+        const url = `https://api.weatherapi.com/v1/current.json?key=${WEATHER_API_KEY}&q=${city}&lang=es`;
         const response = await fetch(url);
         const data = await response.json();
 
-        if (response.ok) {
+        if (response.ok && data.current) {
             const weatherData = {
-                city: `${data.name}, ${data.sys.country}`,
-                temp: Math.round(data.main.temp),
-                description: data.weather[0].description,
-                humidity: data.main.humidity,
-                wind: data.wind.speed.toFixed(1)
+                city: `${data.location.name}, ${data.location.country}`,
+                temp: Math.round(data.current.temp_c),
+                description: data.current.condition.text,
+                humidity: data.current.humidity,
+                wind: data.current.wind_kph.toFixed(1)
             };
             displayWeather(weatherData, 'weatherSearch');
-            showNotification(`✅ Clima de ${data.name} cargado`, 'success');
+            showNotification(`Clima de ${data.location.name} cargado`, 'success');
         } else {
-            throw new Error(data.message || 'Ciudad no encontrada');
+            throw new Error(data.error?.message || 'Ciudad no encontrada');
         }
     } catch (error) {
         console.error('Error al buscar ciudad:', error);
-        showNotification('❌ Ciudad no encontrada. Intenta con otro nombre.', 'error');
+        showNotification('Ciudad no encontrada. Intenta con otro nombre.', 'error');
     }
 }
 

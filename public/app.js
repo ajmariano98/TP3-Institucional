@@ -2,7 +2,7 @@
 const API_URL = window.location.hostname === 'localhost' 
     ? 'http://localhost:3000/api' 
     : '/api';
-const WEATHER_API_KEY = ''; // OpenWeatherMap API (opcional, usaremos datos simulados)
+const WEATHER_API_KEY = 'TU_API_KEY_AQUI'; // Reemplaza con tu API key de OpenWeatherMap
 
 let currentFilter = '';
 let currentCarreraFilter = '';
@@ -62,18 +62,52 @@ function updateDateTime() {
         now.toLocaleDateString('es-ES', options);
 }
 
-// CLIMA - Simulado (OpenWeatherMap requiere API key)
+// CLIMA - OpenWeatherMap API
 async function loadCurrentWeather() {
-    // Simulación de datos de clima para Garupá, Misiones
-    const weatherData = {
-        city: 'Garupá, Misiones',
-        temp: Math.floor(Math.random() * 15) + 20, // 20-35°C
-        description: ['Despejado', 'Parcialmente nublado', 'Nublado', 'Soleado'][Math.floor(Math.random() * 4)],
-        humidity: Math.floor(Math.random() * 40) + 50, // 50-90%
-        wind: (Math.random() * 20 + 5).toFixed(1) // 5-25 km/h
-    };
+    const city = 'Garupá,AR'; // Garupá, Argentina
+    
+    if (!WEATHER_API_KEY || WEATHER_API_KEY === 'TU_API_KEY_AQUI') {
+        // Si no hay API key, usar datos simulados
+        const weatherData = {
+            city: 'Garupá, Misiones',
+            temp: Math.floor(Math.random() * 15) + 20,
+            description: ['Despejado', 'Parcialmente nublado', 'Nublado', 'Soleado'][Math.floor(Math.random() * 4)],
+            humidity: Math.floor(Math.random() * 40) + 50,
+            wind: (Math.random() * 20 + 5).toFixed(1)
+        };
+        displayWeather(weatherData, 'weatherCurrent');
+        return;
+    }
 
-    displayWeather(weatherData, 'weatherCurrent');
+    try {
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${WEATHER_API_KEY}&units=metric&lang=es`;
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (response.ok) {
+            const weatherData = {
+                city: `${data.name}, ${data.sys.country}`,
+                temp: Math.round(data.main.temp),
+                description: data.weather[0].description,
+                humidity: data.main.humidity,
+                wind: data.wind.speed.toFixed(1)
+            };
+            displayWeather(weatherData, 'weatherCurrent');
+        } else {
+            throw new Error('Error al obtener clima');
+        }
+    } catch (error) {
+        console.error('Error al cargar clima:', error);
+        // Fallback a datos simulados si falla la API
+        const weatherData = {
+            city: 'Garupá, Misiones',
+            temp: Math.floor(Math.random() * 15) + 20,
+            description: 'Datos no disponibles',
+            humidity: Math.floor(Math.random() * 40) + 50,
+            wind: (Math.random() * 20 + 5).toFixed(1)
+        };
+        displayWeather(weatherData, 'weatherCurrent');
+    }
 }
 
 async function searchCityWeather() {
@@ -83,25 +117,60 @@ async function searchCityWeather() {
         return;
     }
 
-    // Simulación de búsqueda
-    const weatherData = {
-        city: city,
-        temp: Math.floor(Math.random() * 15) + 15,
-        description: ['Despejado', 'Lluvia', 'Nublado', 'Soleado', 'Ventoso'][Math.floor(Math.random() * 5)],
-        humidity: Math.floor(Math.random() * 40) + 40,
-        wind: (Math.random() * 25 + 3).toFixed(1)
-    };
+    if (!WEATHER_API_KEY || WEATHER_API_KEY === 'TU_API_KEY_AQUI') {
+        // Si no hay API key, usar datos simulados
+        const weatherData = {
+            city: city,
+            temp: Math.floor(Math.random() * 15) + 15,
+            description: ['Despejado', 'Lluvia', 'Nublado', 'Soleado', 'Ventoso'][Math.floor(Math.random() * 5)],
+            humidity: Math.floor(Math.random() * 40) + 40,
+            wind: (Math.random() * 25 + 3).toFixed(1)
+        };
+        displayWeather(weatherData, 'weatherSearch');
+        return;
+    }
 
-    displayWeather(weatherData, 'weatherSearch');
+    try {
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${WEATHER_API_KEY}&units=metric&lang=es`;
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (response.ok) {
+            const weatherData = {
+                city: `${data.name}, ${data.sys.country}`,
+                temp: Math.round(data.main.temp),
+                description: data.weather[0].description,
+                humidity: data.main.humidity,
+                wind: data.wind.speed.toFixed(1)
+            };
+            displayWeather(weatherData, 'weatherSearch');
+            showNotification(`✅ Clima de ${data.name} cargado`, 'success');
+        } else {
+            throw new Error(data.message || 'Ciudad no encontrada');
+        }
+    } catch (error) {
+        console.error('Error al buscar ciudad:', error);
+        showNotification('❌ Ciudad no encontrada. Intenta con otro nombre.', 'error');
+    }
 }
 
 function displayWeather(data, elementId) {
     const icons = {
         'Despejado': '☀️',
         'Soleado': '☀️',
+        'cielo claro': '☀️',
+        'algo de nubes': '⛅',
+        'nubes dispersas': '⛅',
         'Parcialmente nublado': '⛅',
+        'nubes': '☁️',
+        'muy nuboso': '☁️',
         'Nublado': '☁️',
+        'lluvia': '🌧️',
+        'lluvia ligera': '🌧️',
         'Lluvia': '🌧️',
+        'tormenta': '⛈️',
+        'nieve': '❄️',
+        'niebla': '🌫️',
         'Ventoso': '💨'
     };
 
